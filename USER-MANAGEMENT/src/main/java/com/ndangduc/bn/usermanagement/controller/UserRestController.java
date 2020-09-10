@@ -25,7 +25,7 @@ public class UserRestController {
 
     @ApiOperation(value = "Create New User", response = UserDTO.class)
     @ApiResponses({
-            @ApiResponse(code=500,message = "Error System")
+            @ApiResponse(code = 500, message = "Error System")
     })
     @PostMapping("")
     public ResponseEntity<?> createUser(@Valid
@@ -40,14 +40,28 @@ public class UserRestController {
 
     @ApiOperation(value = "Get All User", response = UserDTO.class, responseContainer = "List")
     @ApiResponses({
-            @ApiResponse(code=500,message = "Error System")
+            @ApiResponse(code = 500, message = "Error System")
     })
     @GetMapping("")
     public ResponseEntity<?> getListUser() {
         LOGGER.info("[Get All User]   --- :  START");
-        List<UserDTO> userDTOs= userService.getAllUser();
+        List<UserDTO> userDTOs = userService.getAllUser();
         LOGGER.info("[Get All User]   --- : END");
         return ResponseEntity.status(HttpStatus.OK).body(userDTOs);
+    }
+
+
+    @ApiOperation(value = "Find User By ID", response = UserDTO.class)
+    @ApiResponses({
+            @ApiResponse(code = 500, message = "Error System")
+    })
+    @GetMapping("/{id}")
+    public ResponseEntity<?> findUserByID(@PathVariable
+                                          @ApiParam(value = "Find User By ID", defaultValue = "1") Long id) {
+        LOGGER.info("[Find User By ID]   --- :  START");
+        UserDTO userDTO = userService.findUserByID(id);
+        LOGGER.info("[Find User By ID]   --- : END");
+        return ResponseEntity.status(HttpStatus.OK).body(userDTO);
     }
 
 

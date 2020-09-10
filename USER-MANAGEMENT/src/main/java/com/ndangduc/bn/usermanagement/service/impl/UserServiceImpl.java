@@ -3,6 +3,7 @@ package com.ndangduc.bn.usermanagement.service.impl;
 import com.ndangduc.bn.usermanagement.controller.UserRestController;
 import com.ndangduc.bn.usermanagement.entity.User;
 import com.ndangduc.bn.usermanagement.exception.DuplicatedException;
+import com.ndangduc.bn.usermanagement.exception.NotFoundException;
 import com.ndangduc.bn.usermanagement.model.mapper.UserMapper;
 import com.ndangduc.bn.usermanagement.model.request.CreateUserRequest;
 import com.ndangduc.bn.usermanagement.model.response.UserDTO;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Component
 public class UserServiceImpl implements IUserService {
@@ -55,5 +57,15 @@ public class UserServiceImpl implements IUserService {
         });
         LOGGER.info("[Get All User]   --- :  Result Call\n" + userDTOS);
         return userDTOS;
+    }
+
+    @Override
+    public UserDTO findUserByID(long id) {
+        LOGGER.info("[Find User By ID]   --- :  Call Service Find  User By ID");
+        Optional<User> user = userRepository.findById(id);
+        if (user != null) {
+            return UserMapper.convertToUserDTO(user.get());
+        }
+        throw new NotFoundException("Can not find this User have ID = " + id);
     }
 }

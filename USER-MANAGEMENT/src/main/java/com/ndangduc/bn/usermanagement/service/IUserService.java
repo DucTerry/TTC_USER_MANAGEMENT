@@ -10,4 +10,5 @@ import java.util.List;
 public interface IUserService {
     UserDTO createUser(CreateUserRequest createUserRequest);
     List<UserDTO> getAllUser();
+    UserDTO findUserByID(long id);
 }
