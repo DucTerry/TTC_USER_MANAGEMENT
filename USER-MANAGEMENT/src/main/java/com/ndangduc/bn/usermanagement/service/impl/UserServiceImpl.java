@@ -99,4 +99,18 @@ public class UserServiceImpl implements IUserService {
             throw new NotFoundException("Can not Delete this User have ID = " + id);
         }
     }
+
+    @Override
+    public List<UserDTO> getUserByUserNameOrEmail(String username, String email) {
+        List<User> users = userRepository.getUserByUserNameOrEmail(username, email);
+        List<UserDTO> userDTOS = new ArrayList<>();
+        if (!users.isEmpty()) {
+            users.forEach(u -> {
+                userDTOS.add(UserMapper.convertToUserDTO(u));
+            });
+
+            return userDTOS;
+        }
+        throw new NotFoundException("Cannot find User has userName = " + username + " , email =" + email);
+    }
 }

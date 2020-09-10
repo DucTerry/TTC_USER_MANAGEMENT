@@ -97,4 +97,22 @@ public class UserRestController {
     }
 
 
+    @ApiOperation(value = "Get User by User Name or Email", response = UserDTO.class)
+    @ApiResponses({
+            @ApiResponse(code = 500, message = "Error System")
+    })
+    @GetMapping("/find-user")
+    public ResponseEntity<?> getUserByUserNameOrEmail(@RequestParam
+                                                      @ApiParam(value = "Email", defaultValue = "ducnd@ttc-solutions.com.vn") String email,
+
+                                                      @RequestParam
+                                                      @ApiParam(value = "User Name", defaultValue = "Duc Terry") String username
+    ) {
+        LOGGER.info("[Find User By UserNameOrEmail]   --- :  START");
+        List<UserDTO> userDTOS = userService.getUserByUserNameOrEmail(username, email);
+        LOGGER.info("[Find User By UserNameOrEmail]   --- : END");
+        return ResponseEntity.status(HttpStatus.OK).body(userDTOS);
+    }
+
+
 }
