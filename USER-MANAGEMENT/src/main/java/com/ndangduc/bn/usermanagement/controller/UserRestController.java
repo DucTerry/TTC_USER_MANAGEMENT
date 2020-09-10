@@ -1,6 +1,7 @@
 package com.ndangduc.bn.usermanagement.controller;
 
 import com.ndangduc.bn.usermanagement.model.request.CreateUserRequest;
+import com.ndangduc.bn.usermanagement.model.request.UpdateUserRequest;
 import com.ndangduc.bn.usermanagement.model.response.UserDTO;
 import com.ndangduc.bn.usermanagement.service.IUserService;
 import io.swagger.annotations.*;
@@ -60,6 +61,23 @@ public class UserRestController {
                                           @ApiParam(value = "Find User By ID", defaultValue = "1") Long id) {
         LOGGER.info("[Find User By ID]   --- :  START");
         UserDTO userDTO = userService.findUserByID(id);
+        LOGGER.info("[Find User By ID]   --- : END");
+        return ResponseEntity.status(HttpStatus.OK).body(userDTO);
+    }
+
+
+    @ApiOperation(value = "Update User", response = UserDTO.class)
+    @ApiResponses({
+            @ApiResponse(code = 500, message = "Error System")
+    })
+    @PutMapping("/{id}")
+    public ResponseEntity<?> findUserByID(@PathVariable
+                                          @ApiParam(value = "ID User Need Update") Long id,
+
+                                          @RequestBody
+                                          @ApiParam(value = "Update User") UpdateUserRequest updateUserRequest) {
+        LOGGER.info("[Find User By ID]   --- :  START");
+        UserDTO userDTO = userService.updateUser(updateUserRequest, id);
         LOGGER.info("[Find User By ID]   --- : END");
         return ResponseEntity.status(HttpStatus.OK).body(userDTO);
     }

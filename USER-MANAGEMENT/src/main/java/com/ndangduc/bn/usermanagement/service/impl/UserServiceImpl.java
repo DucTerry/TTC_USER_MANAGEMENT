@@ -3,9 +3,11 @@ package com.ndangduc.bn.usermanagement.service.impl;
 import com.ndangduc.bn.usermanagement.controller.UserRestController;
 import com.ndangduc.bn.usermanagement.entity.User;
 import com.ndangduc.bn.usermanagement.exception.DuplicatedException;
+import com.ndangduc.bn.usermanagement.exception.ErrorSaveException;
 import com.ndangduc.bn.usermanagement.exception.NotFoundException;
 import com.ndangduc.bn.usermanagement.model.mapper.UserMapper;
 import com.ndangduc.bn.usermanagement.model.request.CreateUserRequest;
+import com.ndangduc.bn.usermanagement.model.request.UpdateUserRequest;
 import com.ndangduc.bn.usermanagement.model.response.UserDTO;
 import com.ndangduc.bn.usermanagement.repository.UserRepository;
 import com.ndangduc.bn.usermanagement.service.IUserService;
@@ -67,5 +69,22 @@ public class UserServiceImpl implements IUserService {
             return UserMapper.convertToUserDTO(user.get());
         }
         throw new NotFoundException("Can not find this User have ID = " + id);
+    }
+
+    @Override
+    public UserDTO updateUser(UpdateUserRequest updateUserRequest, long id) {
+        LOGGER.info("[Update User]   --- :  Call Service Update ");
+        Optional<User> user = userRepository.findById(id);
+        if (user != null) {
+            User userUpdate = UserMapper.convertToUser(updateUserRequest, id);
+            try {
+                userRepository.save(userUpdate);
+            } catch (Exception e) {
+                throw new ErrorSaveException("Can not Save to Database");
+            }
+            LOGGER.info("[Update User]   --- :  CResult Call\n" + userUpdate);
+            return UserMapper.convertToUserDTO(userUpdate);
+        }
+        throw new NotFoundException("Can not Update this User have ID = " + id);
     }
 }
