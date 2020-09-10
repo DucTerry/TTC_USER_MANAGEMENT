@@ -83,4 +83,18 @@ public class UserRestController {
     }
 
 
+    @ApiOperation(value = "Delete User By ID", response = UserDTO.class)
+    @ApiResponses({
+            @ApiResponse(code = 500, message = "Error System")
+    })
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteUser(@PathVariable
+                                        @ApiParam(value = "ID User Need Update") Long id) {
+        LOGGER.info("[Find User By ID]   --- :  START");
+        userService.deleteUser(id);
+        LOGGER.info("[Find User By ID]   --- : END");
+        return ResponseEntity.ok(HttpStatus.OK);
+    }
+
+
 }

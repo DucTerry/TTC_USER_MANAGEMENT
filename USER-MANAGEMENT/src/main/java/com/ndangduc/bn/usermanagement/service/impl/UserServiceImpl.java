@@ -82,9 +82,21 @@ public class UserServiceImpl implements IUserService {
             } catch (Exception e) {
                 throw new ErrorSaveException("Can not Save to Database");
             }
-            LOGGER.info("[Update User]   --- :  CResult Call\n" + userUpdate);
+            LOGGER.info("[Update User]   --- :  Result Call\n" + userUpdate);
             return UserMapper.convertToUserDTO(userUpdate);
         }
         throw new NotFoundException("Can not Update this User have ID = " + id);
+    }
+
+    @Override
+    public void deleteUser(Long id) {
+        LOGGER.info("[Update User]   --- :  Call Service Update ");
+        Optional<User> user = userRepository.findById(id);
+        if (user != null) {
+            userRepository.deleteById(id);
+            LOGGER.info("[Update User]   --- :  Result Call\n");
+        } else {
+            throw new NotFoundException("Can not Delete this User have ID = " + id);
+        }
     }
 }
