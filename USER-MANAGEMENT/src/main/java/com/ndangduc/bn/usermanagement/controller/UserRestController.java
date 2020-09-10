@@ -9,12 +9,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("api/user/v1.0/users")
@@ -25,7 +23,7 @@ public class UserRestController {
     @Autowired
     IUserService userService;
 
-    @ApiOperation(value = "Get list user", response = UserDTO.class)
+    @ApiOperation(value = "Create New User", response = UserDTO.class)
     @ApiResponses({
             @ApiResponse(code=500,message = "Error System")
     })
@@ -37,6 +35,19 @@ public class UserRestController {
         UserDTO userDTO = userService.createUser(createUserRequest);
         LOGGER.info("[Create User]   --- : END");
         return ResponseEntity.status(HttpStatus.OK).body(userDTO);
+    }
+
+
+    @ApiOperation(value = "Get All User", response = UserDTO.class, responseContainer = "List")
+    @ApiResponses({
+            @ApiResponse(code=500,message = "Error System")
+    })
+    @GetMapping("")
+    public ResponseEntity<?> getListUser() {
+        LOGGER.info("[Get All User]   --- :  START");
+        List<UserDTO> userDTOs= userService.getAllUser();
+        LOGGER.info("[Get All User]   --- : END");
+        return ResponseEntity.status(HttpStatus.OK).body(userDTOs);
     }
 
 
