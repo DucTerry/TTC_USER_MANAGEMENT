@@ -1,5 +1,6 @@
 package com.ndangduc.bn.usermanagement.controller;
 
+import com.ndangduc.bn.usermanagement.exception.ValidationExceptionHandler;
 import com.ndangduc.bn.usermanagement.model.request.CreateUserRequest;
 import com.ndangduc.bn.usermanagement.model.request.UpdateUserRequest;
 import com.ndangduc.bn.usermanagement.model.response.UserDTO;
@@ -10,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -31,8 +33,12 @@ public class UserRestController {
     @PostMapping("")
     public ResponseEntity<?> createUser(@Valid
                                         @RequestBody
-                                        @ApiParam(value = "Create New User") CreateUserRequest createUserRequest) {
+                                        @ApiParam(value = "Create New User") CreateUserRequest createUserRequest,
+                                        BindingResult bindingResult) {
         LOGGER.info("[Create User]   --- :  START");
+        if (bindingResult.hasErrors()) {
+            throw new ValidationExceptionHandler("Invalid Model. Please supply value valid");
+        }
         UserDTO userDTO = userService.createUser(createUserRequest);
         LOGGER.info("[Create User]   --- : END");
         return ResponseEntity.status(HttpStatus.OK).body(userDTO);
@@ -103,10 +109,10 @@ public class UserRestController {
     })
     @GetMapping("/find-user")
     public ResponseEntity<?> getUserByUserNameOrEmail(@RequestParam
-                                                      @ApiParam(value = "Email", defaultValue = "ducnd@ttc-solutions.com.vn") String email,
+                                                      @ApiParam(value = "Email", defaultValue = "ducnd@ttc-solutions.com.vn", required = true) String email,
 
                                                       @RequestParam
-                                                      @ApiParam(value = "User Name", defaultValue = "Duc Terry") String username
+                                                      @ApiParam(value = "User Name", defaultValue = "Duc Terry", required = true) String username
     ) {
         LOGGER.info("[Find User By UserNameOrEmail]   --- :  START");
         List<UserDTO> userDTOS = userService.getUserByUserNameOrEmail(username, email);
